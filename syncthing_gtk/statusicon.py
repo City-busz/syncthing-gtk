@@ -26,7 +26,7 @@ log = logging.getLogger("StatusIcon")
 # StatusIconKDE4 | excellent       | usable³   | very good⁵ | usable³    | usable³              | excellent           | excellent |
 # StatusIconQt5  | very good (KF5) | -         | -          | -          | -                    | -                   | -         |
 # StatusIconAppI | good²           | none      | excellent  | none       | none                 | excellent           | good²     |
-# StatusIconGTK3 | none            | excellent | none       | very good¹ | very good¹           | none                | good⁴     |
+# StatusIconGTK3 | good            | excellent | none       | very good¹ | very good¹           | none                | good⁴     |
 #
 # Notes:
 #  - StatusIconQt5:
@@ -211,12 +211,6 @@ class StatusIconGTK3(StatusIcon):
 				# Unity fakes SysTray support but actually hides all icons...
 				raise NotImplementedError
 		
-			if IS_KDE:
-				# While the GTK backend works fine on KDE 4, the StatusIconKDE4 backend will achieve better
-				# results and should be available on any standard KDE 4 installation
-				# (since several KDE applications depend on it)
-				raise NotImplementedError
-		
 		self._tray = Gtk.StatusIcon()
 		
 		self._tray.connect("activate", self._on_click)
@@ -246,7 +240,7 @@ class StatusIconGTK3(StatusIcon):
 		# by a fallback icon
 		is_embedded = self._tray.is_embedded() or not self._tray.get_visible()
 		# On some desktops, above check fails but tray is always visible
-		is_embedded = is_embedded or IS_LXQT or IS_CINNAMON
+		is_embedded = is_embedded or IS_KDE or IS_LXQT or IS_CINNAMON
 		if is_embedded != self.get_property("active"):
 			self.set_property("active", is_embedded)
 	
